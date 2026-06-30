@@ -207,9 +207,9 @@ class ContentBlocker {
                                 ruleListIdentifier: identifier,
                                 ruleCount: converted.ruleCount
                             )
-                            self?.logger.log("Compiled personal filter list \(record.name) with \(converted.ruleCount) rules.",
-                                             level: .info,
-                                             category: .adblock)
+                            let message = "Compiled personal filter list \(record.name) "
+                                + "with \(converted.ruleCount) rules."
+                            self?.logger.log(message, level: .info, category: .adblock)
                         }
                         dispatchGroup.leave()
                     }

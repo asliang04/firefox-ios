@@ -144,7 +144,9 @@ class ContentBlockerSettingViewController: SettingsTableViewController {
         }
 
         let customListsFooter = NSAttributedString(
-            string: "Enabled downloaded lists are converted into WebKit content blockers. This first pass supports common network-blocking rules, but not cosmetic filtering or every uBlock rule type."
+            string: "Enabled downloaded lists are converted into WebKit content blockers. "
+                + "This first pass supports common network-blocking rules, but not cosmetic filtering "
+                + "or every uBlock rule type."
         )
         sections.append(
             SettingSection(
@@ -306,7 +308,8 @@ private final class AddFilterListSetting: Setting {
     override func onClick(_ navigationController: UINavigationController?) {
         let alert = UIAlertController(
             title: "Add custom filter list",
-            message: "Paste an ABP/uBlock-style filter-list URL. Supported network rules will be converted into WebKit content blockers.",
+            message: "Paste an ABP/uBlock-style filter-list URL. Supported network rules will be "
+                + "converted into WebKit content blockers.",
             preferredStyle: .alert
         )
         alert.addTextField { textField in
