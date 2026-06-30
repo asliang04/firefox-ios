@@ -139,8 +139,10 @@ class ContentBlocker {
         removeOldListsByHashFromStore { [weak self] in
             self?.removeOldListsByNameFromStore {
                 self?.compileListsNotInStore {
-                    self?.setupCompleted = true
-                    NotificationCenter.default.post(name: .contentBlockerTabSetupRequired, object: nil)
+                    self?.compilePersonalFilterLists {
+                        self?.setupCompleted = true
+                        NotificationCenter.default.post(name: .contentBlockerTabSetupRequired, object: nil)
+                    }
                 }
             }
         }
@@ -149,6 +151,79 @@ class ContentBlocker {
     func prefsChanged() {
         // This class func needs to notify all the active instances of ContentBlocker to update.
         NotificationCenter.default.post(name: .contentBlockerTabSetupRequired, object: nil)
+    }
+
+    func compilePersonalFilterLists(completion: @escaping () -> Void) {
+        let manager = FilterListManager.shared
+        let converter = FilterListWebKitRuleConverter()
+        let recordsToCompile = manager.records().filter { record in
+            guard record.isEnabled,
+                  record.downloadState == .downloaded,
+                  record.localFileName != nil,
+                  record.contentHash != nil else { return false }
+            return record.compileState != .compiled || record.compiledContentHash != record.contentHash
+        }
+
+        guard !recordsToCompile.isEmpty else {
+            completion()
+            return
+        }
+
+        let dispatchGroup = DispatchGroup()
+        for record in recordsToCompile {
+            guard let identifier = manager.contentRuleListIdentifier(for: record) else { continue }
+            dispatchGroup.enter()
+            manager.markCompiling(id: record.id)
+            do {
+                guard let text = try manager.downloadedText(for: record) else {
+                    manager.markCompileFailed(id: record.id, error: "Downloaded file was missing.")
+                    dispatchGroup.leave()
+                    continue
+                }
+                let converted = try converter.convert(filterListText: text)
+                guard let ruleStore else {
+                    manager.markCompileFailed(id: record.id, error: "WebKit content rule store was unavailable.")
+                    dispatchGroup.leave()
+                    continue
+                }
+                ruleStore.compileContentRuleList(
+                    forIdentifier: identifier,
+                    encodedContentRuleList: converted.jsonString
+                ) { [weak self] rule, error in
+                    DispatchQueue.main.async {
+                        if let error {
+                            manager.markCompileFailed(id: record.id, error: error.localizedDescription)
+                            self?.logger.log("Personal filter list compilation failed: \(error)",
+                                             level: .warning,
+                                             category: .adblock)
+                        } else if rule == nil {
+                            manager.markCompileFailed(id: record.id, error: "WebKit returned an empty rule list.")
+                            self?.logger.log("Personal filter list compilation returned nil rule.",
+                                             level: .warning,
+                                             category: .adblock)
+                        } else {
+                            manager.markCompiled(
+                                id: record.id,
+                                ruleListIdentifier: identifier,
+                                ruleCount: converted.ruleCount
+                            )
+                            self?.logger.log("Compiled personal filter list \(record.name) with \(converted.ruleCount) rules.",
+                                             level: .info,
+                                             category: .adblock)
+                        }
+                        dispatchGroup.leave()
+                    }
+                }
+            } catch {
+                manager.markCompileFailed(id: record.id, error: error.localizedDescription)
+                logger.log("Personal filter list conversion failed: \(error)", level: .warning, category: .adblock)
+                dispatchGroup.leave()
+            }
+        }
+
+        dispatchGroup.notify(queue: .main) {
+            completion()
+        }
     }
 
     deinit {

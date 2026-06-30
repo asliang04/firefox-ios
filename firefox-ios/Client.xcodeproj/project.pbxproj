@@ -2189,6 +2189,8 @@
 		EBB89504219398E500EB91A0 /* TrackingProtectionPageStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBB894F5219398E500EB91A0 /* TrackingProtectionPageStats.swift */; };
 		EBB89506219398E500EB91A0 /* TabContentBlocker.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBB894F7219398E500EB91A0 /* TabContentBlocker.swift */; };
 		EBB89507219398E500EB91A0 /* ContentBlocker.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBB894F8219398E500EB91A0 /* ContentBlocker.swift */; };
+		B25A00022F00000200000001 /* FilterListManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25A00012F00000200000001 /* FilterListManager.swift */; };
+		B25A00042F00000300000001 /* FilterListWebKitRuleConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25A00032F00000300000001 /* FilterListWebKitRuleConverter.swift */; };
 		EBB89508219398E500EB91A0 /* ContentBlocker+Safelist.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBB894F9219398E500EB91A0 /* ContentBlocker+Safelist.swift */; };
 		EBB89509219398E500EB91A0 /* TabContentBlocker+ContentScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBB894FA219398E500EB91A0 /* TabContentBlocker+ContentScript.swift */; };
 		EBB8950C21939E4100EB91A0 /* FirefoxTabContentBlocker.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBB8950B2193994A00EB91A0 /* FirefoxTabContentBlocker.swift */; };
@@ -11659,6 +11661,8 @@
 		EBB894F5219398E500EB91A0 /* TrackingProtectionPageStats.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackingProtectionPageStats.swift; sourceTree = "<group>"; };
 		EBB894F7219398E500EB91A0 /* TabContentBlocker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabContentBlocker.swift; sourceTree = "<group>"; };
 		EBB894F8219398E500EB91A0 /* ContentBlocker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentBlocker.swift; sourceTree = "<group>"; };
+		B25A00012F00000200000001 /* FilterListManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterListManager.swift; sourceTree = "<group>"; };
+		B25A00032F00000300000001 /* FilterListWebKitRuleConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterListWebKitRuleConverter.swift; sourceTree = "<group>"; };
 		EBB894F9219398E500EB91A0 /* ContentBlocker+Safelist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ContentBlocker+Safelist.swift"; sourceTree = "<group>"; };
 		EBB894FA219398E500EB91A0 /* TabContentBlocker+ContentScript.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TabContentBlocker+ContentScript.swift"; sourceTree = "<group>"; };
 		EBB8950B2193994A00EB91A0 /* FirefoxTabContentBlocker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirefoxTabContentBlocker.swift; sourceTree = "<group>"; };
@@ -14684,6 +14688,8 @@
 			children = (
 				EBB894F8219398E500EB91A0 /* ContentBlocker.swift */,
 				EBB894F9219398E500EB91A0 /* ContentBlocker+Safelist.swift */,
+				B25A00012F00000200000001 /* FilterListManager.swift */,
+				B25A00032F00000300000001 /* FilterListWebKitRuleConverter.swift */,
 				EBB894F7219398E500EB91A0 /* TabContentBlocker.swift */,
 				EBB894FA219398E500EB91A0 /* TabContentBlocker+ContentScript.swift */,
 				EBB894F5219398E500EB91A0 /* TrackingProtectionPageStats.swift */,
@@ -19668,6 +19674,8 @@
 				AB4FB4DA2C89FB10005EF0CC /* BlockedTrackersModel.swift in Sources */,
 				74E36D781B71323500D69DA1 /* SettingsContentViewController.swift in Sources */,
 				EBB8950C21939E4100EB91A0 /* FirefoxTabContentBlocker.swift in Sources */,
+				B25A00022F00000200000001 /* FilterListManager.swift in Sources */,
+				B25A00042F00000300000001 /* FilterListWebKitRuleConverter.swift in Sources */,
 				21618A632A422A3900A5189E /* ThemeMiddleware.swift in Sources */,
 				0E77DF0F2CB8220000B80BA1 /* GeneratedPasswordStorage.swift in Sources */,
 				BA1237C32DAE6D5700BB6333 /* AddressBarSettingsView.swift in Sources */,
