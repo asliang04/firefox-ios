@@ -61,8 +61,6 @@ enum BlocklistFileName: String, CaseIterable {
     }
 
     /// Blocklist files compiled for Strict tracking protection mode
-    /// If any custom JSON files are included in the bundle with the
-    /// required prefix they will also be compiled and applied for Strict.
     static var strict: [BlocklistFileName] {
         return [
             .advertisingURLs,
@@ -74,7 +72,8 @@ enum BlocklistFileName: String, CaseIterable {
     }
 
     static func listsForMode(strict: Bool) -> [String] {
-        return strict ? (Self.strict.map { $0.filename } + customBlocklistFileNames) : Self.basic.map { $0.filename }
+        let standardBlocklists = strict ? Self.strict : Self.basic
+        return standardBlocklists.map { $0.filename } + customBlocklistFileNames
     }
 
     static let customBlocklistJSONFilePrefix = "fxcb-"
@@ -305,14 +304,25 @@ extension ContentBlocker {
         return hash.compactMap { String(format: "%02x", $0) }.joined()
     }
 
+    private func loadBlockerFileData(for list: String) -> Data? {
+        let jsonSuffix = ".json"
+        let fileTrimmed = list.hasSuffix(jsonSuffix) ? String(list.dropLast(jsonSuffix.count)) : list
+
+        if fileTrimmed.hasPrefix(BlocklistFileName.customBlocklistJSONFilePrefix) {
+            guard let path = Bundle.main.path(forResource: fileTrimmed, ofType: "json") else { return nil }
+            return try? Data(contentsOf: URL(fileURLWithPath: path))
+        }
+
+        return try? RemoteDataType.contentBlockingLists.loadLocalSettingsFileAsJSON(fileName: fileTrimmed)
+    }
+
     private func hasBlockerFileChanged() -> Bool {
         let blocklists = BlocklistFileName.allBlocklistFileNames
         let defaults = UserDefaults.standard
         var hasChanged = false
 
-        let lists = RemoteDataType.contentBlockingLists
         for list in blocklists {
-            guard let data = try? lists.loadLocalSettingsFileAsJSON(fileName: list) else { continue }
+            guard let data = loadBlockerFileData(for: list) else { continue }
             guard let newHash = calculateHash(for: data) else { continue }
 
             let oldHash = defaults.string(forKey: list)
